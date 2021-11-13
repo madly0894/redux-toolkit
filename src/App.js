@@ -68,7 +68,7 @@ function App() {
 
     return (
         <div className="App">
-            <div style={{ borderBottom: '1px solid black', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ borderBottom: '1px solid grey', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4 }}/>
@@ -99,7 +99,7 @@ function App() {
                         {todos.map((item, index) => (
                             <li
                                 key={item.id}
-                                style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10, cursor: 'pointer', backgroundColor: todo.id === item.id && 'rgba(0, 0, 0, 0.05' }}
+                                style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid grey', padding: 10, cursor: 'pointer', backgroundColor: todo.id === item.id && 'rgba(0, 0, 0, 0.05' }}
                                 onClick={() => onSelectTodo(item)}
                             >
                                 <div title={item.title}>
