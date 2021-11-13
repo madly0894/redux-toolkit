@@ -65,8 +65,8 @@ function App() {
     };
 
     return (
-        <div>
-            <div style={{ borderBottom: '1px solid black', padding: 10 }}>
+        <div className="App">
+            <div style={{ borderBottom: '1px solid black', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ width: 300 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 10 }}/>
@@ -85,7 +85,7 @@ function App() {
                     )}
                 </div>
 
-                <button style={{ marginTop: 10 }} disabled={todos.length === 0} onClick={deleteAllTodos}>Delete All</button>
+                <button style={{ marginTop: 10, alignSelf: 'flex-start' }} disabled={todos.length === 0} onClick={deleteAllTodos}>Delete All</button>
             </div>
 
             {

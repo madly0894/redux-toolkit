@@ -8,6 +8,19 @@ input[type=checkbox] {
   cursor: pointer;
 }
 
+ul {
+  height: calc(100% - 88px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 li:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+li div:first-child {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-right: 10px;
 }
