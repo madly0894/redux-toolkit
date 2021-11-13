@@ -38,7 +38,7 @@ const todoSlice = createSlice({
             // const index = state.findIndex(x => x.id === action.payload.id);
             //
             // state[index].title = action.payload.title;
-            todoAdapter.updateOne(state, action.payload);
+            todoAdapter.upsertOne(state, action.payload);
         },
         deleteTodo: (state, action) => {
             // const index = state.findIndex(x => x.id === action.payload);

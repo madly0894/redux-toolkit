@@ -17,15 +17,16 @@ function App() {
 
     const addTodo = () => {
         if (!isAdd) {
-            dispatch(actions.addTodo(todo));
+            dispatch(actions.addTodo({
+                id: new Date().getTime(),
+                title: todo.title
+            }));
             setTodo(initialState);
         }
     };
-    const updateTodo = (id) => {
-        dispatch(actions.updateTodo({
-            id,
-            title: todo.title
-        }));
+    const updateTodo = () => {
+        dispatch(actions.updateTodo(todo));
+        onClose();
     };
     const deleteTodo = (id) => {
         const confirm = window.confirm('Are you sure to delete this todo?');
@@ -35,26 +36,27 @@ function App() {
         }
     };
     const onChangeTodo = (e) => {
-        setTodo({
-            id: new Date().getTime(),
+        setTodo(prevState => ({
+            ...prevState,
             title: e.target.value
-        });
+        }));
     };
     const onSelectTodo = (obj) => {
         setTodo(obj);
         setShow(true);
     };
+    const onClose = () => {
+        setTodo(initialState);
+        setShow(false);
+    }
 
     return (
         <div className="App">
             <div>
                 <input type="text" onChange={onChangeTodo} value={todo.title}/>&nbsp;
-                <button onClick={() => show ? updateTodo(todo) : addTodo(todo)} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
+                <button onClick={() => show ? updateTodo() : addTodo()} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
                 {show &&
-                <button onClick={() => {
-                    setTodo(initialState);
-                    setShow(false);
-                }}>
+                <button onClick={onClose}>
                     Close
                 </button>
                 }
