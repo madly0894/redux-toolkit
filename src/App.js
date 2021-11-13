@@ -16,8 +16,6 @@ function App() {
     const [show, setShow] = useState(false);
     const isAdd = todos.some(t => t.title === todo.title);
 
-    console.log(todo)
-
     const addTodo = () => {
         if (!isAdd && todo.title !== '') {
             dispatch(actions.addTodo(todo.title));
@@ -69,7 +67,7 @@ function App() {
             <div style={{ borderBottom: '1px solid black', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ width: 300 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 10 }}/>
+                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 4 }}/>
                         <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' }</button>
                         <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
                         {show &&
