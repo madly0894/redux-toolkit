@@ -16,7 +16,10 @@ import {createAsyncThunk, createEntityAdapter, createSlice, nanoid} from "@redux
 //     title: ''
 // }
 
-const todoAdapter = createEntityAdapter({});
+const todoAdapter = createEntityAdapter({
+    // sortComparer: (a, b) => b.id - a.id
+});
+
 export const {selectAll: TodoSelector, selectIds: TodosIdsSelector} = todoAdapter.getSelectors(({todo}) => todo);
 
 const initialState = todoAdapter.getInitialState({

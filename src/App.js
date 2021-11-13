@@ -74,7 +74,6 @@ function App() {
                         <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4 }}/>
                         <div>
                             <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
-                            <button onClick={addRandomTodo} style={{ marginRight: 4 }}>Add random title</button>
                             <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
                             {show &&
                                 <button onClick={onClose}>
@@ -90,7 +89,10 @@ function App() {
                     )}
                 </div>
 
-                <button style={{ marginTop: 10, alignSelf: 'flex-start' }} disabled={todos.length === 0} onClick={deleteAllTodos}>Delete All</button>
+                <div>
+                    <button style={{ marginRight: 4 }} onClick={addRandomTodo}>Add random title</button>
+                    <button style={{ marginTop: 10 }} disabled={todos.length === 0} onClick={deleteAllTodos}>Delete All</button>
+                </div>
             </div>
 
             {
