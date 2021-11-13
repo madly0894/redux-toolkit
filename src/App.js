@@ -97,7 +97,7 @@ function App() {
                                 style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10, cursor: 'pointer', backgroundColor: todo.id === item.id && 'rgba(0, 0, 0, 0.05' }}
                                 onClick={() => onSelectTodo(item)}
                             >
-                                <div>
+                                <div title={item.title}>
                                     {index + 1}. {item.title}
                                 </div>
                                 <div>
