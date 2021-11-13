@@ -1,4 +1,4 @@
-import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createEntityAdapter, createSlice, nanoid} from "@reduxjs/toolkit";
 
 // const createTodoThunk = createAsyncThunk('todo/create', async (params, { dispatch, getState, rejectWithValue }) => {
 //     try {
@@ -17,7 +17,7 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 // }
 
 const todoAdapter = createEntityAdapter({});
-export const { selectAll: TodoSelector, selectIds: TodosIdsSelector } = todoAdapter.getSelectors(({ todo }) => todo);
+export const {selectAll: TodoSelector, selectIds: TodosIdsSelector} = todoAdapter.getSelectors(({todo}) => todo);
 
 const initialState = todoAdapter.getInitialState({
     loading: false,
@@ -27,12 +27,20 @@ const todoSlice = createSlice({
     name: 'todo',
     initialState,
     reducers: {
-        addTodo: (state, action) => {
-            // state.push({
-            //     id: Math.random(),
-            //     title: action.payload
-            // });
-            todoAdapter.setOne(state, action.payload);
+        addTodo: {
+            reducer: (state, action) => {
+                // // state.push({
+                // //     id: Math.random(),
+                // //     title: action.payload
+                // // });
+                todoAdapter.setOne(state, action.payload);
+            },
+            prepare: title => ({
+                payload: {
+                    id: nanoid(),
+                    title
+                }
+            })
         },
         updateTodo: (state, action) => {
             // const index = state.findIndex(x => x.id === action.payload.id);
@@ -46,8 +54,8 @@ const todoSlice = createSlice({
             // state.splice(index, 1);
             todoAdapter.removeOne(state, action.payload);
         },
-        deleteAllTodos: (state, action) => {
-            todoAdapter.removeMany(state, action.payload);
+        deleteAllTodos: state => {
+            todoAdapter.setAll(state, []);
         },
     },
     extraReducers: {
@@ -64,6 +72,6 @@ const todoSlice = createSlice({
     }
 });
 
-export const { addTodo, deleteTodo, updateTodo, deleteAllTodos } = todoSlice.actions
+export const {addTodo, deleteTodo, updateTodo, deleteAllTodos} = todoSlice.actions
 
 export default todoSlice.reducer;

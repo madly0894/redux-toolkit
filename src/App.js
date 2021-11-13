@@ -5,7 +5,6 @@ import * as actions from "./store/todo";
 import {TodosIdsSelector, TodoSelector} from "./store/todo";
 
 const initialState = {
-    id: new Date().getTime(),
     title: ''
 };
 
@@ -14,16 +13,14 @@ function App() {
     const todos = useSelector(TodoSelector);
     const todosIds = useSelector(TodosIdsSelector);
     const [todo, setTodo] = useState(initialState);
-    const [checkedAll, setCheckedAll] = useState(false);
     const [show, setShow] = useState(false);
     const isAdd = todos.some(t => t.title === todo.title);
 
+    console.log(todo)
+
     const addTodo = () => {
         if (!isAdd && todo.title !== '') {
-            dispatch(actions.addTodo({
-                id: new Date().getTime(),
-                title: todo.title
-            }));
+            dispatch(actions.addTodo(todo.title));
             setTodo(initialState);
         }
     };
@@ -31,11 +28,16 @@ function App() {
         dispatch(actions.updateTodo(todo));
         onClose();
     };
-    const deleteTodo = (id) => {
+    const deleteTodo = (e, obj) => {
+        e.stopPropagation();
         const confirm = window.confirm('Are you sure to delete this todo?');
 
         if (confirm) {
-            dispatch(actions.deleteTodo(id));
+            dispatch(actions.deleteTodo(obj.id));
+            if (obj.id === todo.id) {
+                setShow(false);
+                setTodo(initialState);
+            }
         }
     };
     const deleteAllTodos = () => {
@@ -43,20 +45,15 @@ function App() {
 
         if (confirm) {
             dispatch(actions.deleteAllTodos(todosIds));
-            setCheckedAll(false);
+            setShow(false);
+            setTodo(initialState);
         }
     };
     const resetTodo = () => {
-        setTodo(initialState);
+        setTodo(prevTodo => ({ ...prevTodo, title: '' }));
     };
     const onChangeTodo = (e) => {
-        setTodo(prevState => ({
-            ...prevState,
-            title: e.target.value
-        }));
-    };
-    const onSelectAllTodos = (e) => {
-        setCheckedAll(e.target.checked);
+        setTodo(prevTodo => ({ ...prevTodo, title: e.target.value }));
     };
     const onSelectTodo = (obj) => {
         setTodo(obj);
@@ -73,8 +70,8 @@ function App() {
                 <div style={{ width: 300 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 10 }}/>
-                        <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
-                        <button onClick={resetTodo} disabled={todo.title.length === 0}>Reset</button>
+                        <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' }</button>
+                        <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
                         {show &&
                         <button onClick={onClose}>
                             Close
@@ -86,31 +83,25 @@ function App() {
                             You cannot add and update the same title.
                         </div>
                     )}
-                    {
-                        todo.title.length === 0 && (
-                            <div style={{ color: 'grey', fontSize: 12, marginTop: 2 }}>
-                                You cannot add and update empty title.
-                            </div>
-                        )
-                    }
                 </div>
 
-                <div style={{ width: 300, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
-                    <input type="checkbox" checked={checkedAll} onChange={onSelectAllTodos} disabled={todos.length === 0} style={{ margin: 0 }} />
-                    {checkedAll && <button onClick={deleteAllTodos}>Delete All</button>}
-                </div>
+                <button style={{ marginTop: 10 }} disabled={todos.length === 0} onClick={deleteAllTodos}>Delete All</button>
             </div>
 
             {
                 todos.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0, marginTop: 0 }}>
                         {todos.map((item, index) => (
-                            <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10 }}>
-                                <div onClick={() => onSelectTodo(item)} style={{ textDecoration: checkedAll && 'line-through', color: checkedAll && 'grey' }}>
+                            <li
+                                key={item.id}
+                                style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10, cursor: 'pointer' }}
+                                onClick={() => onSelectTodo(item)}
+                            >
+                                <div>
                                     {index + 1}. {item.title}
                                 </div>
                                 <div>
-                                    <button onClick={() => deleteTodo(item.id)}>Delete</button>
+                                    <button onClick={(e) => deleteTodo(e, item)}>Delete</button>
                                 </div>
                             </li>
                         ))}
