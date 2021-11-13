@@ -3,6 +3,7 @@ import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "./store/todo";
 import {TodosIdsSelector, TodoSelector} from "./store/todo";
+import {nanoid} from "@reduxjs/toolkit";
 
 const initialState = {
     title: ''
@@ -22,6 +23,9 @@ function App() {
             setTodo(initialState);
         }
     };
+    const addRandomTodo = () => {
+        dispatch(actions.addTodo(nanoid()));
+    }
     const updateTodo = () => {
         dispatch(actions.updateTodo(todo));
         onClose();
@@ -65,16 +69,19 @@ function App() {
     return (
         <div className="App">
             <div style={{ borderBottom: '1px solid black', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ width: 300 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 4 }}/>
-                        <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' }</button>
-                        <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
-                        {show &&
-                        <button onClick={onClose}>
-                            Close
-                        </button>
-                        }
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4 }}/>
+                        <div>
+                            <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
+                            <button onClick={addRandomTodo} style={{ marginRight: 4 }}>Add random title</button>
+                            <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
+                            {show &&
+                                <button onClick={onClose}>
+                                    Close
+                                </button>
+                            }
+                        </div>
                     </div>
                     {isAdd && (
                         <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
