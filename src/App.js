@@ -46,6 +46,9 @@ function App() {
             setCheckedAll(false);
         }
     };
+    const resetTodo = () => {
+        setTodo(initialState);
+    };
     const onChangeTodo = (e) => {
         setTodo(prevState => ({
             ...prevState,
@@ -65,48 +68,59 @@ function App() {
     };
 
     return (
-        <div className="App">
-            <div style={{ width: 300 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 10 }}/>
-                    <button onClick={() => show ? updateTodo() : addTodo()} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
-                    {show &&
+        <div>
+            <div style={{ borderBottom: '1px solid black', padding: 10 }}>
+                <div style={{ width: 300 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 10 }}/>
+                        <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
+                        <button onClick={resetTodo} disabled={todo.title.length === 0}>Reset</button>
+                        {show &&
                         <button onClick={onClose}>
                             Close
                         </button>
+                        }
+                    </div>
+                    {isAdd && (
+                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                            You cannot add and update the same title.
+                        </div>
+                    )}
+                    {
+                        todo.title.length === 0 && (
+                            <div style={{ color: 'grey', fontSize: 12, marginTop: 2 }}>
+                                You cannot add and update empty title.
+                            </div>
+                        )
                     }
                 </div>
-                {isAdd && (
-                    <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
-                        You cannot add and update the same title.
+
+                <div style={{ width: 300, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                    <input type="checkbox" checked={checkedAll} onChange={onSelectAllTodos} disabled={todos.length === 0} style={{ margin: 0 }} />
+                    {checkedAll && <button onClick={deleteAllTodos}>Delete All</button>}
+                </div>
+            </div>
+
+            {
+                todos.length > 0 ? (
+                    <ul style={{ listStyleType: 'none', padding: 0, marginTop: 0 }}>
+                        {todos.map((item, index) => (
+                            <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10 }}>
+                                <div onClick={() => onSelectTodo(item)} style={{ textDecoration: checkedAll && 'line-through', color: checkedAll && 'grey' }}>
+                                    {index + 1}. {item.title}
+                                </div>
+                                <div>
+                                    <button onClick={() => deleteTodo(item.id)}>Delete</button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div style={{ marginTop: 10, textAlign: 'center' }}>
+                        No data
                     </div>
-                )}
-                {
-                    todo.title.length === 0 && (
-                        <div style={{ color: 'grey', fontSize: 12, marginTop: 2 }}>
-                            You cannot add and update empty title.
-                        </div>
-                    )
-                }
-            </div>
-
-            <div style={{ width: 300, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
-                <input type="checkbox" checked={checkedAll} onChange={onSelectAllTodos} disabled={todos.length === 0} style={{ margin: 0 }} />
-                {checkedAll && <button onClick={deleteAllTodos}>Delete All</button>}
-            </div>
-
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
-                {todos.map((item, index) => (
-                    <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10 }}>
-                        <div onClick={() => onSelectTodo(item)} style={{ textDecoration: checkedAll && 'line-through' }}>
-                            {index + 1}. {item.title}
-                        </div>
-                        <div>
-                            <button onClick={() => deleteTodo(item.id)}>Delete</button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+                )
+            }
         </div>
     );
 }

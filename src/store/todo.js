@@ -48,7 +48,7 @@ const todoSlice = createSlice({
         },
         deleteAllTodos: (state, action) => {
             todoAdapter.removeMany(state, action.payload);
-        }
+        },
     },
     extraReducers: {
         // [createTodoThunk.pending]: (state, action) => {
