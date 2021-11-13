@@ -71,7 +71,7 @@ function App() {
             <div style={{ borderBottom: '1px solid grey', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4 }}/>
+                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4, width: 300 }}/>
                         <div>
                             <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
                             <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
