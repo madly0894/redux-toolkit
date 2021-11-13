@@ -1,56 +1,63 @@
-import {createAsyncThunk, createEntityAdapter, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-    {id: 1, title: 'Yaver'},
-    {id: 2, title: 'Vugar'}
-];
+// const createTodoThunk = createAsyncThunk('todo/create', async (params, { dispatch, getState, rejectWithValue }) => {
+//     try {
+//         const response = await axios.get('dada');
+//         const data = await response.data;
+//
+//         return data;
+//     } catch (ex) {
+//         return rejectWithValue(ex.response.data);
+//     }
+// });
 
+// const initialState = {
+//     id: new Date().getTime(),
+//     title: ''
+// }
 
-const createTodoThunk = createAsyncThunk('todo/create', async (params, { dispatch, getState, rejectWithValue }) => {
-    try {
-        const response = await axios.get('dada');
-        const data = await response.data;
+const todoAdapter = createEntityAdapter({});
+export const { selectAll: TodoSelector } = todoAdapter.getSelectors(({ todo }) => todo);
 
-        return data;
-    } catch (ex) {
-        return rejectWithValue(ex.response.data);
-    }
+const initialState = todoAdapter.getInitialState({
+    loading: false,
 });
-
-const entityAdapter = createEntityAdapter({});
 
 const todoSlice = createSlice({
     name: 'todo',
     initialState,
     reducers: {
         addTodo: (state, action) => {
-            state.push({
-                id: Math.random(),
-                title: action.payload
-            });
-        },
-        deleteTodo: (state, action) => {
-            const index = state.findIndex(x => x.id === action.payload);
-
-            state.splice(index, 1);
+            // state.push({
+            //     id: Math.random(),
+            //     title: action.payload
+            // });
+            todoAdapter.setOne(state, action.payload);
         },
         updateTodo: (state, action) => {
-            const index = state.findIndex(x => x.id === action.payload.id);
-
-            state[index].title = action.payload.title;
+            // const index = state.findIndex(x => x.id === action.payload.id);
+            //
+            // state[index].title = action.payload.title;
+            todoAdapter.updateOne(state, action.payload);
+        },
+        deleteTodo: (state, action) => {
+            // const index = state.findIndex(x => x.id === action.payload);
+            //
+            // state.splice(index, 1);
+            todoAdapter.removeOne(state, action.payload);
         },
     },
     extraReducers: {
-        [createTodoThunk.pending]: (state, action) => {
-            state.loading = true;
-        },
-        [createTodoThunk.fulfilled]: (state, action) => {
-            state.loading = false;
-            entityAdapter.setAll(state, action.payload);
-        },
-        [createTodoThunk.rejected]: (state, action) => {
-            state.loading = false;
-        },
+        // [createTodoThunk.pending]: (state, action) => {
+        //     state.loading = true;
+        // },
+        // [createTodoThunk.fulfilled]: (state, action) => {
+        //     state.loading = false;
+        //     entityAdapter.setAll(state, action.payload);
+        // },
+        // [createTodoThunk.rejected]: (state, action) => {
+        //     state.loading = false;
+        // },
     }
 });
 
