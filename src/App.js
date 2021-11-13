@@ -1,7 +1,8 @@
+import './App.css';
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "./store/todo";
-import {TodoSelector} from "./store/todo";
+import {TodosIdsSelector, TodoSelector} from "./store/todo";
 
 const initialState = {
     id: new Date().getTime(),
@@ -11,12 +12,14 @@ const initialState = {
 function App() {
     const dispatch = useDispatch();
     const todos = useSelector(TodoSelector);
+    const todosIds = useSelector(TodosIdsSelector);
     const [todo, setTodo] = useState(initialState);
+    const [checkedAll, setCheckedAll] = useState(false);
     const [show, setShow] = useState(false);
-    const isAdd = todos.some(t => t.title === todo.title) && todo.title !== '';
+    const isAdd = todos.some(t => t.title === todo.title);
 
     const addTodo = () => {
-        if (!isAdd) {
+        if (!isAdd && todo.title !== '') {
             dispatch(actions.addTodo({
                 id: new Date().getTime(),
                 title: todo.title
@@ -35,11 +38,22 @@ function App() {
             dispatch(actions.deleteTodo(id));
         }
     };
+    const deleteAllTodos = () => {
+        const confirm = window.confirm('Are you sure to delete all todos?');
+
+        if (confirm) {
+            dispatch(actions.deleteAllTodos(todosIds));
+            setCheckedAll(false);
+        }
+    };
     const onChangeTodo = (e) => {
         setTodo(prevState => ({
             ...prevState,
             title: e.target.value
         }));
+    };
+    const onSelectAllTodos = (e) => {
+        setCheckedAll(e.target.checked);
     };
     const onSelectTodo = (obj) => {
         setTodo(obj);
@@ -48,29 +62,43 @@ function App() {
     const onClose = () => {
         setTodo(initialState);
         setShow(false);
-    }
+    };
 
     return (
         <div className="App">
-            <div>
-                <input type="text" onChange={onChangeTodo} value={todo.title}/>&nbsp;
-                <button onClick={() => show ? updateTodo() : addTodo()} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
-                {show &&
-                <button onClick={onClose}>
-                    Close
-                </button>
+            <div style={{ width: 300 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ width: '100%', marginRight: 10 }}/>
+                    <button onClick={() => show ? updateTodo() : addTodo()} disabled={isAdd}>{ show ? 'Update' : 'Add' }</button>
+                    {show &&
+                        <button onClick={onClose}>
+                            Close
+                        </button>
+                    }
+                </div>
+                {isAdd && (
+                    <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                        You cannot add and update the same title.
+                    </div>
+                )}
+                {
+                    todo.title.length === 0 && (
+                        <div style={{ color: 'grey', fontSize: 12, marginTop: 2 }}>
+                            You cannot add and update empty title.
+                        </div>
+                    )
                 }
             </div>
-            {isAdd && (
-                <div style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
-                   We cannot add and update the same title.
-                </div>
-            )}
+
+            <div style={{ width: 300, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                <input type="checkbox" checked={checkedAll} onChange={onSelectAllTodos} disabled={todos.length === 0} style={{ margin: 0 }} />
+                {checkedAll && <button onClick={deleteAllTodos}>Delete All</button>}
+            </div>
 
             <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {todos.map((item, index) => (
-                    <li key={item.id} style={{display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10}}>
-                        <div onClick={() => onSelectTodo(item)}>
+                    <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10 }}>
+                        <div onClick={() => onSelectTodo(item)} style={{ textDecoration: checkedAll && 'line-through' }}>
                             {index + 1}. {item.title}
                         </div>
                         <div>

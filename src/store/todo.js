@@ -17,7 +17,7 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 // }
 
 const todoAdapter = createEntityAdapter({});
-export const { selectAll: TodoSelector } = todoAdapter.getSelectors(({ todo }) => todo);
+export const { selectAll: TodoSelector, selectIds: TodosIdsSelector } = todoAdapter.getSelectors(({ todo }) => todo);
 
 const initialState = todoAdapter.getInitialState({
     loading: false,
@@ -46,6 +46,9 @@ const todoSlice = createSlice({
             // state.splice(index, 1);
             todoAdapter.removeOne(state, action.payload);
         },
+        deleteAllTodos: (state, action) => {
+            todoAdapter.removeMany(state, action.payload);
+        }
     },
     extraReducers: {
         // [createTodoThunk.pending]: (state, action) => {
@@ -61,6 +64,6 @@ const todoSlice = createSlice({
     }
 });
 
-export const { addTodo, deleteTodo, updateTodo } = todoSlice.actions
+export const { addTodo, deleteTodo, updateTodo, deleteAllTodos } = todoSlice.actions
 
 export default todoSlice.reducer;
