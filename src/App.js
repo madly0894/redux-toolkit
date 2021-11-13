@@ -94,7 +94,7 @@ function App() {
                         {todos.map((item, index) => (
                             <li
                                 key={item.id}
-                                style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10, cursor: 'pointer' }}
+                                style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', padding: 10, cursor: 'pointer', backgroundColor: todo.id === item.id && 'rgba(0, 0, 0, 0.05' }}
                                 onClick={() => onSelectTodo(item)}
                             >
                                 <div>

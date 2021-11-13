@@ -7,3 +7,7 @@ button[disabled] {
 input[type=checkbox] {
   cursor: pointer;
 }
+
+li:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
