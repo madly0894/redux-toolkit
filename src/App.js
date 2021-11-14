@@ -16,8 +16,8 @@ function App() {
     const [show, setShow] = useState(false);
     const isAdd = todos.some(t => t.title === todo.title);
 
-    const addTodo = (e) => {
-        if (!isAdd && todo.title !== '' && e.key === 'Enter') {
+    const addTodo = () => {
+        if (!isAdd && todo.title !== '') {
             dispatch(actions.addTodo(todo.title));
             setTodo(initialState);
         }
@@ -26,8 +26,10 @@ function App() {
         dispatch(actions.addManyTodo());
     }
     const updateTodo = () => {
-        dispatch(actions.updateTodo(todo));
-        onClose();
+        if (!isAdd && todo.title !== '') {
+            dispatch(actions.updateTodo(todo));
+            onClose();
+        }
     };
     const deleteTodo = (e, obj) => {
         e.stopPropagation();
@@ -70,7 +72,14 @@ function App() {
             <div style={{ borderBottom: '1px solid grey', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4, width: 300 }} onKeyPress={addTodo}/>
+                        <input
+                            type="text"
+                            placeholder="Title"
+                            onChange={onChangeTodo}
+                            value={todo.title}
+                            style={{ marginRight: 4, width: 300 }}
+                            onKeyPress={(e) => e.key === 'Enter' ? show ? updateTodo() : addTodo() : undefined}
+                        />
                         <div>
                             <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
                             <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
