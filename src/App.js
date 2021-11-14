@@ -3,7 +3,6 @@ import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "./store/todo";
 import {TodosIdsSelector, TodoSelector} from "./store/todo";
-import {nanoid} from "@reduxjs/toolkit";
 
 const initialState = {
     title: ''
@@ -23,8 +22,8 @@ function App() {
             setTodo(initialState);
         }
     };
-    const addRandomTodo = () => {
-        dispatch(actions.addTodo(nanoid()));
+    const addRandomTodos = () => {
+        dispatch(actions.addManyTodo());
     }
     const updateTodo = () => {
         dispatch(actions.updateTodo(todo));
@@ -46,7 +45,7 @@ function App() {
         const confirm = window.confirm('Are you sure to delete all todos?');
 
         if (confirm) {
-            dispatch(actions.deleteAllTodos(todosIds));
+            dispatch(actions.deleteManyTodos(todosIds));
             setShow(false);
             setTodo(initialState);
         }
@@ -90,7 +89,7 @@ function App() {
                 </div>
 
                 <div>
-                    <button style={{ marginRight: 4 }} onClick={addRandomTodo}>Add random title</button>
+                    <button style={{ marginRight: 4 }} onClick={addRandomTodos}>Add 100 random title</button>
                     <button style={{ marginTop: 10 }} disabled={todos.length === 0} onClick={deleteAllTodos}>Delete All</button>
                 </div>
             </div>

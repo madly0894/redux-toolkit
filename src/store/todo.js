@@ -45,6 +45,18 @@ const todoSlice = createSlice({
                 }
             })
         },
+        addManyTodo: (state) => {
+            const arr = [];
+
+            for (let i = 0; i < 100; i++) {
+                arr.push({
+                    id: nanoid(),
+                    title: nanoid()
+                })
+            }
+
+            todoAdapter.setMany(state, arr);
+        },
         updateTodo: (state, action) => {
             // const index = state.findIndex(x => x.id === action.payload.id);
             //
@@ -57,7 +69,7 @@ const todoSlice = createSlice({
             // state.splice(index, 1);
             todoAdapter.removeOne(state, action.payload);
         },
-        deleteAllTodos: state => {
+        deleteManyTodos: state => {
             todoAdapter.setAll(state, []);
         },
     },
@@ -75,6 +87,6 @@ const todoSlice = createSlice({
     }
 });
 
-export const {addTodo, deleteTodo, updateTodo, deleteAllTodos} = todoSlice.actions
+export const {addTodo, addManyTodo, deleteTodo, updateTodo, deleteManyTodos} = todoSlice.actions
 
 export default todoSlice.reducer;
