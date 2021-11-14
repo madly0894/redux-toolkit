@@ -14,6 +14,7 @@ function App() {
     const todosIds = useSelector(TodosIdsSelector);
     const [todo, setTodo] = useState(initialState);
     const [show, setShow] = useState(false);
+    const [theme, setTheme] = useState(false);
     const isAdd = todos.some(t => t.title === todo.title);
 
     const addTodo = () => {
@@ -66,35 +67,54 @@ function App() {
         setTodo(initialState);
         setShow(false);
     };
+    const changeTheme = () => {
+        setTheme(prevTheme => !prevTheme);
+
+        if (theme) {
+            document.body.style.filter = 'none'
+            document.body.style.backgroundColor = '#fff'
+        } else {
+            document.body.style.filter = 'invert(1)'
+            document.body.style.backgroundColor = '#000'
+        }
+    }
 
     return (
         <div className="App">
             <div style={{ borderBottom: '1px solid grey', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            onChange={onChangeTodo}
-                            value={todo.title}
-                            style={{ marginRight: 4, width: 300 }}
-                            onKeyPress={(e) => e.key === 'Enter' ? show ? updateTodo() : addTodo() : undefined}
-                        />
-                        <div>
-                            <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
-                            <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
-                            {show &&
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <input
+                                type="text"
+                                placeholder="Title"
+                                onChange={onChangeTodo}
+                                value={todo.title}
+                                style={{ marginRight: 4, width: 300 }}
+                                onKeyPress={(e) => e.key === 'Enter' ? show ? updateTodo() : addTodo() : undefined}
+                            />
+                            <div>
+                                <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
+                                <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
+                                {show &&
                                 <button onClick={onClose}>
                                     Close
                                 </button>
-                            }
+                                }
+                            </div>
                         </div>
+                        {isAdd && (
+                            <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
+                                You cannot add and update the same title.
+                            </div>
+                        )}
                     </div>
-                    {isAdd && (
-                        <div style={{ color: 'red', fontSize: 12, marginTop: 2 }}>
-                            You cannot add and update the same title.
-                        </div>
-                    )}
+
+                    <div>
+                        <button onClick={changeTheme}>
+                            { theme ? 'Light' : 'Dark' } theme
+                        </button>
+                    </div>
                 </div>
 
                 <div>
