@@ -16,8 +16,8 @@ function App() {
     const [show, setShow] = useState(false);
     const isAdd = todos.some(t => t.title === todo.title);
 
-    const addTodo = () => {
-        if (!isAdd && todo.title !== '') {
+    const addTodo = (e) => {
+        if (!isAdd && todo.title !== '' && e.key === 'Enter') {
             dispatch(actions.addTodo(todo.title));
             setTodo(initialState);
         }
@@ -70,7 +70,7 @@ function App() {
             <div style={{ borderBottom: '1px solid grey', paddingInline: 10, height: 88, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4, width: 300 }}/>
+                        <input type="text" placeholder="Title" onChange={onChangeTodo} value={todo.title} style={{ marginRight: 4, width: 300 }} onKeyPress={addTodo}/>
                         <div>
                             <button onClick={() => show ? updateTodo() : addTodo()} style={{ marginRight: 4 }} disabled={isAdd || todo.title === ''}>{ show ? 'Update' : 'Add' } title</button>
                             <button onClick={resetTodo} style={{ marginRight: 4 }} disabled={todo.title === ''}>Reset</button>
